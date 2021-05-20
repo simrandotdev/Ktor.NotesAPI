@@ -19,7 +19,6 @@ fun main() {
         // Setting Routing
         install(Routing) {
             registerRoute()
-            loginRoute()
         }
         // Format in which we want to sent the response
         install(ContentNegotiation) {
