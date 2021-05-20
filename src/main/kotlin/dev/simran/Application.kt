@@ -3,6 +3,7 @@ package dev.simran
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import dev.simran.plugins.*
+import dev.simran.routes.loginRoute
 import dev.simran.routes.registerRoute
 import io.ktor.application.*
 import io.ktor.features.*
@@ -18,6 +19,7 @@ fun main() {
         // Setting Routing
         install(Routing) {
             registerRoute()
+            loginRoute()
         }
         // Format in which we want to sent the response
         install(ContentNegotiation) {

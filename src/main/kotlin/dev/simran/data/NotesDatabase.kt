@@ -26,3 +26,13 @@ suspend fun checkIfUserExists(email: String): Boolean {
 //        .findOne("{email: $email}") != null   // OR
         .findOne(User::email eq email) != null
 }
+
+suspend fun checkPasswordForEmail(email: String, passwordToCheck: String): Boolean {
+    val actualPassword = users.findOne(User::email eq email)?.password
+
+    actualPassword.let {
+        return actualPassword == passwordToCheck
+    }
+
+    return false
+}
