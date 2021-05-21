@@ -1,11 +1,12 @@
 package dev.simran
 
+import dev.simran.data.checkPasswordForEmail
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import dev.simran.plugins.*
-import dev.simran.routes.loginRoute
 import dev.simran.routes.registerRoute
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.gson.*
 import io.ktor.routing.*
@@ -26,7 +27,27 @@ fun main() {
                 setPrettyPrinting()
             }
         }
+        install(Authentication) {
+            configureAuth()
+        }
 
         configureRouting()
     }.start(wait = true)
+}
+
+
+private fun Authentication.Configuration.configureAuth() {
+    basic {
+        realm = "Notes Server"
+        validate { credentials ->
+            val email = credentials.name
+            val password = credentials.password
+
+            if(checkPasswordForEmail(email, password)) {
+                UserIdPrincipal(email)
+            } else {
+                null
+            }
+        }
+    }
 }
