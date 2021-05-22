@@ -7,7 +7,7 @@ data class Note(
     val title: String,
     val content: String,
     val date: Long,
-    val owners: List<String>,
+    var owners: MutableList<String> = ArrayList(),
     val color: String,
     @BsonId
     val id: String = ObjectId().toString()
