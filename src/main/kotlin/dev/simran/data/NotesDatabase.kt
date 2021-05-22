@@ -2,6 +2,7 @@ package dev.simran.data
 
 import dev.simran.data.collections.Note
 import dev.simran.data.collections.User
+import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
 import org.litote.kmongo.reactivestreams.KMongo
@@ -35,4 +36,9 @@ suspend fun checkPasswordForEmail(email: String, passwordToCheck: String): Boole
     }
 
     return false
+}
+
+suspend fun getNotesForUser(email: String): List<Note> {
+    val notesList = notes.find(Note::owners contains email)
+    return notesList.toList()
 }

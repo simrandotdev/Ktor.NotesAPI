@@ -4,6 +4,7 @@ import dev.simran.data.checkPasswordForEmail
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import dev.simran.plugins.*
+import dev.simran.routes.notesRoutes
 import dev.simran.routes.registerRoute
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -17,18 +18,19 @@ fun main() {
         install(DefaultHeaders)
         // Logging calls made to API
         install(CallLogging)
+        install(Authentication) {
+            configureAuth()
+        }
         // Setting Routing
         install(Routing) {
             registerRoute()
+            notesRoutes()
         }
         // Format in which we want to sent the response
         install(ContentNegotiation) {
             gson {
                 setPrettyPrinting()
             }
-        }
-        install(Authentication) {
-            configureAuth()
         }
 
         configureRouting()
