@@ -1,11 +1,8 @@
 package dev.simran.routes
 
+import dev.simran.data.*
 import dev.simran.data.collections.Note
-import dev.simran.data.deleteNote
-import dev.simran.data.getNotesForUser
 import dev.simran.data.requests.UpdateOwnerRequest
-import dev.simran.data.saveNote
-import dev.simran.data.updateOwner
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -41,8 +38,10 @@ fun Route.notesRoutes() {
 
                 if(saveNote(note)) {
                     call.respond(HttpStatusCode.OK)
+                    return@post
                 } else {
                     call.respond(HttpStatusCode.Conflict)
+                    return@post
                 }
             }
 
@@ -52,8 +51,10 @@ fun Route.notesRoutes() {
 
                 if (deleteNote(idToDelete, email)) {
                     call.respond(HttpStatusCode.OK)
+                    return@delete
                 } else {
                     call.respond(HttpStatusCode.Conflict, "Not able to delete the Note.")
+                    return@delete
                 }
             }
 
@@ -68,10 +69,18 @@ fun Route.notesRoutes() {
                     return@put
                 }
 
+                // TODO: Check is newOwner is already the owner then do not add it.
+                if(userIsOwnerOf(newOwner.email, noteId)) {
+                    call.respond(HttpStatusCode.Conflict, "${newOwner.email} is already an owner.")
+                    return@put
+                }
+
                 if(updateOwner(noteId, newOwner.email, email)) {
                     call.respond(HttpStatusCode.OK)
+                    return@put
                 } else {
                     call.respond(HttpStatusCode.Conflict, "Not able to update owner of the Note.")
+                    return@put
                 }
             }
         }
